@@ -1,0 +1,39 @@
+{% extends "main/base_list.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}
+News-Delete
+{% endblock %}
+
+{% block header %}
+<h3>Тестовый портал новостей ( РТК 2023 )</h3>
+<div class="row">
+    <p class="col-6 text-start"> News-Delete </p>
+    {% if user.is_authenticated %}
+    <p class="col-6 text-end"> {{user.username}} </p>
+    {% else %}
+    <p class="col-6 text-end"> Anonynous </p>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block nav %}
+asd
+{% endblock %}
+{% block content %}
+<div class="test1 row">
+    <div class="text-center" style="margin-top:100px; margin-bottom:100px;">
+        <h1 class="m-5">Удалить {{ article.title }}?</h1>
+        <form method="post" class="contact_form">
+            {% csrf_token %}
+            <a class="me-4 btn btn-warning btn-lg" href="{% url 'news_all' %}">Отмена</a>
+            <input type="submit" class=" ms-4 btn btn-danger btn-lg" value="Удалить">
+        </form>
+    </div>
+
+</div>
+{% endblock %}

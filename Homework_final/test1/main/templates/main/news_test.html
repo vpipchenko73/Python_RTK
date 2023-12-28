@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <link rel="stylesheet" href="{% static 'css/stylesheet.css'%}" type="text/css">
+</head>
+<header>
+    {% include 'main/elements/header.html' %}
+</header>
+<body>
+
+<nav class=" p-3 navbar navbar-expand-sm bg-dark navbar-dark">
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Навигация
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Действие</a></li>
+            <li><a class="dropdown-item" href="#">Другое действие</a></li>
+            <li><a class="dropdown-item" href="/">На главную</a></li>
+        </ul>
+    </div>
+</nav>
+
+<h1> Тут будем смотреть новости )))</h1>
+<h1> А пока тренируемся заполнять модели</h1>
+<form method="post">
+    {% csrf_token %}
+    <label> Name tovara</label>
+    <input type="text" name="title">
+    <br>
+    <label> Cena tovara</label>
+    <input type="text" name="price">
+    <br>
+    <label> Kolicestvo</label>
+    <input type="number" min="1"  max="100" name="quantiti">
+    <br>
+    <input class = "btn-primary" type = "submit" value="Сохранить">
+</form>
+
+<footer>
+    {% include 'main/elements/footer.html' %}
+</footer>
+</body>

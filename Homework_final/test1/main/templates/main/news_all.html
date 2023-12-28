@@ -1,0 +1,145 @@
+{% extends "main/base_list.html" %}
+{% block title %}
+All-News
+{% endblock %}
+
+{% block header %}
+<h3>Тестовый портал новостей ( РТК 2023 )</h3>
+<div class="row">
+    <p class="col-6 text-start"> All-News </p>
+    {% if user.is_authenticated %}
+    <p class="col-6 text-end">
+<!--    <a class="dropdown-item" href="{% url 'account' %}">{{user.username}}</a>-->
+        <a class="btn btn-primary" style="text-decoration: underline" href="{% url 'account' %}" role="button">{{user.username}}</a>
+    </p>
+    {% else %}
+    <p class="col-6 text-end"> Anonynous </p>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block nav %}
+<div class="dropdown ms-3 col-4 d-flex justify-content-start ">
+    <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Навигация
+    </button>
+    <ul class="dropdown-menu dropdown-menu-dark">
+        {% comment %}
+        <li><a class="dropdown-item" href="#">Действие</a></li>
+        <li><a class="dropdown-item" href="#">Другое действие</a></li>
+        {% endcomment %}
+        <li><a class="dropdown-item" href="/">На главную</a></li>
+    </ul>
+</div>
+
+<span class="pe-4 col-3 text-light align-text-top d-flex justify-content-end"> Фильтр по категории и автору: </span>
+
+<div class="form-group col-5 d-flex justify-content-center">
+    <form method="post">
+        {% csrf_token %}
+        <div class="input-group ">
+
+            <select class=" me-3 form-select" name="category_filter" style="width:20%; background: #f2f2f2">
+                <option value="0">Все категории</option>
+                {% for category in category_list %}
+                <option value="{{ forloop.counter }}" {% if selected_category == forloop.counter %} selected {% endif %}>
+                    {{ category.1 }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <select class=" me-3 form-select " name="author_filter" style="width:20%; background: #f2f2f2">
+                <option value="0">Все авторы</option>
+                {% for author in author_list %}
+<!--                <option value="{{author.id}}" {% if selected == author.id %} selected {% endif %}> {{ author.username }}-->
+                    <option value="{{author.author}}" {% if selected == author.id %} selected {% endif %}> {{ author.author__username }}
+                </option>
+                {% endfor %}
+            </select>
+            <span class="input-group-btn ">
+                                     <input type="submit" class="btn btn-secondary me-3 " value="Применить">
+
+                </span>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+
+{% block content %}
+<div class=" pt-3 test1">
+    <div class="row ">
+
+        {% if articles %}
+        {% for article in articles %}
+
+        <div>
+            <div class="row">
+                <div class="d-flex justify-content-center">
+                <div class="col-2 d-flex flex-column">
+                        <div class="text-center">
+                            <h5>
+                            Автор: {{ article.author }}
+                            <!--                Accaunt: {{ article.author.id }}-->
+                            </h5>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            {% for acc in account_list %}
+                            {% if acc.user.id == article.author.id %}
+                            <!--                Accaunt: {{ acc.account_image.url }}-->
+                            <img src={{acc.account_image.url}} width="100" height="100" alt="Account" class="rounded-3 border border-dark">
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                </div>
+
+
+
+                    <div class=" col-8 m-1 ps-3 pe-3 w-60 text-white rounded bg-secondary ">
+                        <div>
+                            <!--                <p class="display-6 fst-italic"> {{ article.title }}</p>-->
+                            <p class="fs-5">Название статьи &#8194; &#8212; &#8194; {{ article.title }}</p>
+                            <p class="fs-6">Краткое содержание статьи &#8194; &#8212; &#8194;{{ article.anouncement }}</p>
+                            <!--                <p class="fs-6"><a href="/news/{{ article.pk }}/" class="text-white fw-bold">Полный текст...</a>-->
+                            <p class="fs-6">
+                                <a href="/news/{{ article.pk }}/" class="text-info "><u>Полный текст...</u></a>
+                            </p>
+                            <p style="font-size: 7pt;">Количество  просмотров &#8212; {{article.get_views}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+       <!-- Блок пагинации -->
+        <div class="p-2 text-center ">
+        <h4 class="text-dark">
+       {% if articles.has_previous %}
+             <a href="?page=1">начало</a>
+             <a href="?page={{ articles.previous_page_number }}"><<<</a>
+       {% endif %}
+
+
+        {% for num in articles.paginator.page_range %}
+            {% if articles.number == num %}
+                <a>{{ num }}</a>
+            {% elif num > articles.number|add:'-3' and num < articles.number|add:'3' %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+         <!-- Если есть следующая страница, то даём ссылку на неё и на самую последнюю страницу -->
+        {% if articles.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}">>>></a>
+              <a href="?page={{ page_obj.paginator.num_pages }}">конец</a>
+        {% endif %}
+
+        <h4>
+        </div>
+
+            {% else %}
+            <h1 class="text-center" style="margin-top:100px; margin-bottom:100px;">Новостей нет!</h1>
+            {% endif %}
+        </div>
+    </div>
+    {% endblock %}

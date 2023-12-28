@@ -1,0 +1,79 @@
+{% extends "main/base_list.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Account-Edit
+{% endblock %}
+
+{% block header %}
+<h1>Тестовый портал новостей ( РТК 2023 )</h1>
+<div class="row">
+    <p class="col-6 text-start"> Account-Edit </p>
+    {% if user.is_authenticated %}
+    <p class="col-6 text-end"> {{user.username}} </p>
+    {% else %}
+    <p class="col-6 text-end"> Anonynous </p>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block nav %}
+<div class="container-fluid">
+    <!--    <a href="/" class="btn btn-dark">Назад</a>-->
+    <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Навигация
+    </button>
+    <ul class="dropdown-menu dropdown-menu-dark">
+        <li><a class="dropdown-item " href="/">На главную</a></li>
+        <li><a class="dropdown-item " href="/news_all">Все новости</a></li>
+    </ul>
+</div>
+{% endblock %}
+{% block content %}
+<div class="test1">
+
+    <div class=" pt-3 text-center">
+        <h3>Редактирование профиля пользователя</h3>
+    </div>
+    <div class="row">
+        <div class=" pe-5 col-6 d-flex flex-column">
+            <div class="d-flex justify-content-end">
+                <img src={{account.account_image.url}} width="300" height="300" class="rounded-3 border border-dark"
+                     alt="Account">
+            </div>
+            <div class="pt-4 d-flex justify-content-end">
+                <ul class="text-start">
+                    <li><b>Псевдоним &#8194; &#8212; &#8194;</b> {{account.nickname}}</li>
+                    <li><b>День рождения &#8194; &#8212; &#8194;</b> {{account.birthdate}}</li>
+                    <li><b>Пол &#8194; &#8212; &#8194;</b> {{account.get_gender_display}}</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="ps-5 col-6 d-flex justify-content-start">
+            <form method="post" class="contact_form" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                {{ account_form|crispy }}
+
+                {% comment %}
+                {{ form|crispy }}
+                {% endcomment %}
+                <div class="p-2 col-6 d-flex justify-content-center">
+                    <input type="submit" class="btn btn-primary " value="Сохранить">
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends "main/base_list.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Home-List
+{% endblock %}
+News-Create
+{% block header %}
+<h3>Тестовый портал новостей ( РТК 2023 )</h3>
+<div class="row">
+    <p class="col-6 text-start"> News-Create </p>
+    {% if user.is_authenticated %}
+    <p class="col-6 text-end">
+<!--    <a class="dropdown-item" href="{% url 'account' %}">{{user.username}}</a>-->
+        <a class="btn btn-primary" style="text-decoration: underline" href="{% url 'account' %}" role="button">{{user.username}}</a>
+    </p>
+    {% else %}
+    <p class="col-6 text-end"> Anonynous </p>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block nav %}
+<div class="container-fluid">
+    <a id="button_back" class="btn btn-dark btn-sm" href="{% url 'index' %}" role="button">Назад</a>
+</div>
+{% endblock %}
+{% block content %}
+<div class=" test1 row">
+    <div class="text-center" style="margin-top:30px;">
+        <h1>Создание статьи</h1>
+        <!--                в обязательном порядке указываем enctype-->
+        <form method="post" class="contact_form" enctype="multipart/form-data">
+            <div class="row d-flex justify-content-center">
+                {% csrf_token %}
+                <!--            {{ form|crispy }}-->
+                <!--            {{ image_form|crispy }}-->
+                <div class=" col-5">
+                    {{ form.title.label}}
+                    {{ form.title}}
+                    {% for error in form.title.errors %}
+                        <span class="text-danger" style="font-size: 10pt;">{{ error }}</span>
+                    {% endfor %}
+                    <br>
+                    {{ form.anouncement.label}}
+                    {{ form.anouncement}}
+                    {% for error in form.anouncement.errors %}
+                        <span class="text-danger" style="font-size: 10pt;">{{ error }}</span>
+                    {% endfor %}
+                    <br>
+                    {{ form.text.label}}
+                    {{ form.text}}
+                    {% for error in form.text.errors %}
+                        <span class="text-danger" style="font-size: 10pt;">{{ error }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="p-1 col-5">
+                    {{ form.category.label}}
+                    {{ form.category}}
+                    <br>
+                    {{ "Тэги"}}
+                    {{ form.tags}}
+<!--                    <br>-->
+<!--                    {{ "Выберете иллюстрации к новости" }}-->
+<!--                    <br>-->
+                    {% comment %}
+                    {{ image_form|crispy}}
+                    {% endcomment %}
+                    <br>
+
+                    {% bootstrap_field form.image_field %}
+
+<!--                    {{ form.errors }}-->
+
+
+
+                </div>
+
+<!--                                {{ image_form|crispy }}-->
+                <div class="p-2 col-6 d-flex justify-content-center">
+                    <input type="submit" class="btn btn-primary " value="Сохранить">
+                </div>
+
+        </form>
+    </div>
+
+</div>
+{% endblock %}

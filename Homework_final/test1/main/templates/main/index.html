@@ -1,0 +1,204 @@
+{% extends "main/base_list.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load crispy_forms_tags %}
+{% load main_extras %}
+
+{% block title %}
+Home-List
+{% endblock %}
+
+{% block header %}
+<h3>Тестовый портал новостей ( РТК 2023 )</h3>
+<div class="row">
+    <p class="col-6 text-start"> Home-List </p>
+    {% if user.is_authenticated %}
+    <p class="col-6 text-end"> {{user.username}} </p>
+    {% else %}
+    <p class="col-6 text-end"> Anonynous </p>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block nav %}
+<div class="container-fluid">
+    <ul class="navbar-nav">
+        {% comment %}
+        <li class="nav-item">
+            <!--            <a class="nav-link" href="{% url 'news_test' %}">Тest_list</a>-->
+            <a href="{% url 'news_test' %}" class="btn btn-dark ">Test_list</a>
+        </li>
+        {% endcomment%}
+        <li class="nav-item">
+            {% if user.is_authenticated %}
+            <!--            <a class="nav-link   " href="{% url 'news_all' %}">Все новости</a>-->
+            <a href="{% url 'news_all' %}" class="btn btn-dark bt-sm">Все новости</a>
+            {% else %}
+              <span class="text-light" >
+               После регистрации будет доступен просмотр всех новостей
+              </span>
+            {% endif %}
+        </li>
+    </ul>
+</div>
+
+<div class="btn-group d-flex justify-content-end">
+    <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        {% if user.is_authenticated %}
+        <span> {{user.username}} </span>
+        {% else %}
+        <span class="col-6 text-end"> Anonynous </span>
+        {% endif %}
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+
+        {% if user.is_authenticated %}
+
+        <li><a class="dropdown-item" href="{% url 'account' %}">Мой аккаунт</a></li>
+        <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Выйти</a></li>
+        {% else %}
+        <li>
+            <button class=" ms-3 btn btn-primary" data-bs-toggle="offcanvas"
+                    style=" padding: 0; border: none; background: none;"
+                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Войти в аккаунт
+            </button>
+        </li>
+        {% endif%}
+    </ul>
+</div>
+{% comment %}
+<div class=" pe-5 collapse navbar-collapse d-flex justify-content-end" id="navbarNavDarkDropdown" aria-expanded="false">
+    <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
+               data-bs-toggle="dropdown" aria-expanded="false">
+                {% if user.is_authenticated %}
+                <span> {{user.username}} </span>
+                {% else %}
+                <span class="col-6 text-end"> Anonynous </span>
+                {% endif %}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                {% if user.is_authenticated %}
+                <li><a class="dropdown-item" href="#">Мой аккаунт</a></li>
+                <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Выйти</a></li>
+                {% else %}
+                <li>
+                    <button class=" ms-3 btn btn-primary" data-bs-toggle="offcanvas"
+                            style=" padding: 0; border: none; background: none;"
+                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Войти в аккаунт
+                    </button>
+                </li>
+                {% endif%}
+
+            </ul>
+        </li>
+    </ul>
+</div>
+{% endcomment %}
+
+{% endblock %}
+
+{% block content %}
+<div class="pb-3 test1">
+    <div class="container pt-5">
+        <div class="row">
+            <div class="col-sm-4">
+                <h4>О проекте:</h4>
+                <img src="https://s00.yaplakal.com/pics/pics_original/6/6/1/18133166.jpg" width="250" class="rounded-3 border border-dark" alt="Image">
+                <br>
+                <p>Пробная работа - "Новостной портал"</p>
+
+                <!--                <button id="create_button" type="button" class="btn btn-primary" href="#">Создать новость</button>-->
+                <a id="create_button" href="{% url 'news_create1' %}" class="btn btn-primary">Создать новость</a>
+                {% comment %}
+                {% if user.is_authenticated == False %}
+                {% endcomment %}
+                {% if request.user|has_group:"Authors" == False %}
+                <script>
+                    const button_c = document.getElementById("create_button");
+                    button_c.setAttribute("style", "display: none;");
+                </script>
+                <h7 class="text-primary">
+                    {% if request.user|has_group:"Actions Required" %}
+                         <p>Вы кандидат в АВТОРЫ дождитесь когда Администратор утвердит Вашу заявку </p>
+                    {% endif %}
+                    {% if request.user|has_group:"Reader" %}
+                         <p>Вы ЧИТАТЕЛЬ Вы можете просматривать все статьи на данном сайте </p>
+                    {% endif %}
+                    {% if user.is_authenticated == False %}
+                            <a href="/registration/" class="text-primary">
+                                 Для прочтения/написания новостей необходимо зарегистрироваться нажав на эту ссылку
+                            </a>
+                    {% endif %}
+                </h7>
+                {% endif %}
+                <h5 class="mt-4">Темы освещаемые на портале:</h5>
+                <ul class="nav nav-pills flex-column">
+                    {% for category in category_list %}
+                    <li>{{ category.1 }}</li>
+                    {% endfor %}
+                </ul>
+                <hr class="d-sm-none">
+            </div>
+            <div class="col-sm-8">
+                <hr>
+                <h4>Сегодня {{ date_time|date:'d/ M / Y' }}</h4>
+                <h6> Статистика портала </h6>
+                <h7> Количество новостей >>&#8194; &#9993; &#8194;{{ quantity_articles }}</h7>
+                <br>
+                <h7> Зарегистрировано пользователей >> &#8194; &#9937;&#8194; {{ quantity_user }}</h7>
+                <br>
+                <h7> Из них авторов >> &#8194; &#10002; &#8194; {{ quantity_authors }}</h7>
+                <br>
+                <hr>
+                <h4 class="mt-5">Последняя новость </h4>
+                <h6>Дата публикации &#8194; &#8212; &#8194; {{ articles_last.date|date:'d/ M / Y' }}</h6>
+                <hr>
+                <p><b>Тема публикации &#8194; &#8212; &#8194;</b> {{ articles_last.get_category_display}}</p>
+                <hr>
+                <p><b>Автор статьи &#8194; &#8212; &#8194;</b> {{ articles_last.author}}</p>
+                <p><b>Название статьи &#8194; &#8212; &#8194;</b> {{ articles_last.title}}</p>
+                <p><b>Содержание статьи &#8194; &#8212; &#8194;</b>{{ articles_last.text}}</p>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="offcanvas offcanvas-end" style="background-color: #D8D8D8" tabindex="-1" id="offcanvasRight"
+     aria-labelledby="offcanvasRightLabel">
+     <div class="offcanvas-body" id="offcanvas">
+        <div class="row">
+            {% if user.is_authenticated == False %}
+            <div class="text-center" style="margin-top:30px;">
+                <h3>Войти в аккаунт</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+
+                    <input type="submit" class=" m-3 btn btn-primary" value="Войти">
+
+                    <div>
+                        {% endif %}
+
+                        <small class="text-muted"> Нужен аккаунт?</small>
+                        <a class="ml-2" href="{% url 'registration' %}">Зарегистрироваться</a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% if request.user|has_group:"Authors" %}
+   Yraaaaaaa!!!!!!!!!!!!!!
+{% endif %}
+
+{% endblock %}
+

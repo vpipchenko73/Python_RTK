@@ -1,0 +1,92 @@
+{% extends "main/base_list.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+Registration User
+{% endblock %}
+
+{% block header %}
+<h1>Тестовый портал новостей ( РТК 2023 )</h1>
+<div class="row">
+    <p class="col-6 text-start"> Registration User </p>
+    {% if user.is_authenticated %}
+    <p class="col-6 text-end"> {{user.username}} </p>
+    {% else %}
+    <p class="col-6 text-end"> Anonynous </p>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block nav %}
+<div class="container-fluid">
+    <!--    <a href="/" class="btn btn-dark">Назад</a>-->
+    <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Навигация
+    </button>
+    <ul class="dropdown-menu dropdown-menu-dark">
+        <li><a class="dropdown-item " href="/">На главную</a></li>
+        <li><a class="dropdown-item " href="/news_all">Все новости</a></li>
+    </ul>
+</div>
+{% endblock %}
+{% block content %}
+<div class="test1">
+    <div class="d-flex justify-content-center">
+        <div class=" text-center" style="margin-top:30px;">
+            <h3>Регистрация нового пользователя</h3>
+            <form method="post" class="contact_form">
+                {% csrf_token %}
+                <!--                 {{ form|crispy }} -->
+                <!--                <table class="col-10">-->
+                <!--                    <tr>-->
+                <!--                        <td>{{ form.username.label }}:</td>-->
+                <!--                        <td>{{ form.username }}</td>-->
+                <!--                    </tr>-->
+                <!--                    <tr>-->
+                <!--                        <td>{{ form.email.label }}:</td>-->
+                <!--                        <td>{{ form.email  }}</td>-->
+                <!--                    </tr>-->
+                <!--                    <tr>-->
+                <!--                        <td>{{ form.password1.label  }}:</td>-->
+                <!--                        <td>{{ form.password1 }}</td>-->
+                <!--                    </tr>-->
+                <!--                    <tr>-->
+                <!--                        <td>{{ form.password2.label }}:</td>-->
+                <!--                        <td>{{ form.password2  }}</td>-->
+                <!--                    </tr>-->
+                <!--                </table>-->
+                <div class="p-3">
+                    {{ form.username.label }}
+                    {{ form.username }}
+                    {{ form.email.label }}
+                    {{ form.email }}
+                    {{ form.password1.label }}
+                    {{ form.password1 }}
+                    {{ form.password2.label }}
+                    {{ form.password2 }}
+                </div>
+                <div>
+                    <span class="pe-4">
+                    <input class="form-check-input" type="radio" id="author" name="account_type" value="author">
+                    <label class=" form-check-label" for="author">Автор</label>
+                    </span>
+                    <span class="ps-4">
+                    <input class=" form-check-input" type="radio" id="reader" name="account_type" value="reader"
+                           checked>
+                    <label class="form-check-label" for="reader">Читатель</label>
+                    </span>
+                </div>
+                <div class="p-4">
+                    <input type="submit" class="btn btn-lg btn-primary" value="Зарегистрировать">
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

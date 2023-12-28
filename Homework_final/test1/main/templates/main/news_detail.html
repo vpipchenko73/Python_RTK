@@ -1,0 +1,106 @@
+{% extends "main/base_list.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}
+News-detail
+{% endblock %}
+
+{% block header %}
+<h3>Тестовый портал новостей ( РТК 2023 )</h3>
+<div class="row">
+    <p class="col-6 text-start"> News-detail </p>
+    {% if user.is_authenticated %}
+    <p class="col-6 text-end">
+<!--    <a class="dropdown-item" href="{% url 'account' %}">{{user.username}}</a>-->
+        <a class="btn btn-primary" style="text-decoration: underline" href="{% url 'account' %}" role="button">{{user.username}}</a>
+    </p>
+    {% else %}
+    <p class="col-6 text-end"> Anonynous </p>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block nav %}
+<div class="container-fluid">
+    <!--    <a href="/" class="btn btn-dark">Назад</a>-->
+    <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Навигация
+    </button>
+    <ul class="dropdown-menu dropdown-menu-dark">
+        <li><a class="dropdown-item " href="/">На главную</a></li>
+        <li><a class="dropdown-item " href="/news_all">Все новости</a></li>
+        {% if request.user == article.author %}
+        <li><a class="dropdown-item " href="/update/{{ article.pk }}">Редактировать</a></li>
+        <li><a class="dropdown-item text-danger" href="/delete/{{ article.pk }}">Удалить </a></li>
+        {% endif %}
+    </ul>
+</div>
+
+<!--<span class="pe-4 col-5 text-light align-text-top d-flex justify-content-end"> Доступные действия: </span>-->
+<!--<div class="form-group col-3 d-flex justify-content-center">-->
+
+<!--    <a class="me-4 btn btn-primary" href="/update/{{ article.pk }}" role="button">Редактировать </a>-->
+<!--    <a class="btn btn-danger" href="" role="button">Удалить </a>-->
+
+<!--</div>-->
+
+{% endblock %}
+
+{% block content %}
+<div class="test1">
+    <div class="container pt-5 pb-5">
+        <ul>
+            <li>
+                <b>Автор &#8194; &#8212; &#8194;{{article.author}}</b>
+            </li>
+            <li>
+                <b>Тема &#8194; &#8212; &#8194;{{article.get_category_display}}</b>
+            </li>
+            <li>
+                <b>Название &#8194; &#8212; &#8194;{{article.title}}</b>
+            </li>
+            <li>
+                <b>Текст&#8194; &#8212; &#8194;</b> {{article.text}}
+            </li>
+
+        </ul>
+        <p>
+            <!--            <a href="/update/{{ article.pk }}" class="text-primary  p-3"><u>Редактировать новость</u></a>-->
+            <!--            &lt;!&ndash; добавим ссылку на редактирование новости&ndash;&gt;-->
+            <!--            <a href="/delete/{{ article.pk }}" class="text-danger"><u>Удалить новость</u></a>-->
+            <!--            &lt;!&ndash; добавим ссылку на удаление новости&ndash;&gt;-->
+        </p>
+        {% if article.image_set.all %}
+        <div id="carouselExample" class="carousel slide">
+            <div class="carousel-inner" role="listbox" style=" width:auto; height: 300px; !important;">
+                <!-----       -->
+                {% for image in article.image_set.all %}
+                <div class="carousel-item {% if forloop.counter == 1 %} active {% endif %}">
+                    <img class="d-block" src="{{ image.image.url }}"
+                         style="margin:auto; height:300px; width:auto; border-radius:5px;">
+                </div>
+                {% endfor %}
+                <!-----       -->
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
+                    data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Предыдущий</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
+                    data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Следующий</span>
+            </button>
+        </div>
+    </div>
+
+    {% else %}
+    <h2> Новость не проиллюстрирована </h2>
+    {% endif %}
+</div>
+{% endblock %}
