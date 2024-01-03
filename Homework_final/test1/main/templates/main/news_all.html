@@ -42,7 +42,7 @@ All-News
             <select class=" me-3 form-select" name="category_filter" style="width:20%; background: #f2f2f2">
                 <option value="0">Все категории</option>
                 {% for category in category_list %}
-                <option value="{{ forloop.counter }}" {% if selected_category == forloop.counter %} selected {% endif %}>
+                <option value="{{ forloop.counter }}" {% if select_c == forloop.counter %} selected {% endif %}>
                     {{ category.1 }}
                 </option>
                 {% endfor %}
@@ -50,9 +50,11 @@ All-News
 
             <select class=" me-3 form-select " name="author_filter" style="width:20%; background: #f2f2f2">
                 <option value="0">Все авторы</option>
-                {% for author in author_list %}
+                {% for author in author_list1 %}
 <!--                <option value="{{author.id}}" {% if selected == author.id %} selected {% endif %}> {{ author.username }}-->
-                    <option value="{{author.author}}" {% if selected == author.id %} selected {% endif %}> {{ author.author__username }}
+                <option value="{{author.id}}" {% if select_a == author.id %} selected {% endif %}> {{ author.username }}
+<!--                    <option value="{{author.author}}" {% if select_a == author.id %} selected {% endif %}> {{ author.author__username }}-->
+
                 </option>
                 {% endfor %}
             </select>
