@@ -157,6 +157,11 @@ https://proproprogs.ru/django4/django4-dekorator-login-required-i-klass-loginreq
 Пользовательские теги
 https://djangodoc.ru/3.2/howto/custom-template-tags/
 
+Фильтрация моделей в джанго
+https://metanit.com/python/django/5.13.php
+
+Операции со множествами допустим выбрать уникальные имена
+https://metanit.com/python/django/5.15.php
 
 
 
