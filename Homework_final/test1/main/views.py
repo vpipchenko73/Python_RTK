@@ -23,7 +23,6 @@ def index(request):
     user_l=['Anonimus']
     form = UserAuthForm()
 
-
     if User.is_authenticated :
         user_l = request.user.username
         print (user_l)
@@ -104,31 +103,63 @@ def test(request):
 def news_all(request):
     #articles = Article.objects.all()
     #context = {'today_articles': articles}
+    select_a = request.session.get('author_filter')
+    select_c = request.session.get('category_filter')
+    select_a = 0 if select_a == None else select_a
+    select_c = 0 if select_c == None else select_c
+    print ('-----------------------------')
+    print ('select_a', select_a )
+    print('select_c', select_c)
+
     author_list = []
     author_temp = Article.objects.all().values('author', 'author__username')
-    for i in author_temp: # цикл удаления из массива повторяющихся авторов
+    author_list1 = User.objects.filter(article__isnull=False).distinct() #создали перечень авторов не пустых
+    print(author_list1)
+    for i in author_temp: # цикл удаления из массива повторяющихся авторов  второй вариант формирования списка
         #print(i)
         if (i in author_list) == False:
             author_list.append(i)
     account_list = Account.objects.all()
     category_list = Article.categories
     selected = 0
+
     if request.method == "POST":
         #print(request.POST)
         select_a = int (request.POST.get('author_filter'))
         select_c = int(request.POST.get('category_filter'))
+        print('+++++++++++++++++++++++++++++++')
+        print('select_a', select_a)
+        print('select_c', select_c)
 
-        if select_a == 0:
-            articles = Article.objects.all()
-        else:
-            articles = Article.objects.filter(author=select_a)
-            #print(connection.queries)
+        request.session['author_filter'] = select_a
+        request.session['category_filter'] = select_c
+        print('Print session -----------------------------------------')
+        print(dict(request.session))
+        return redirect('news_all')
+
+    else:  # если страница открывется впервые или нас переадресовала сюда функция поиск
+        articles = Article.objects.all()
+        if select_a != 0:  # если не пустое - находим нужные ноновсти
+            articles = articles.filter(author=select_a)
         if select_c != 0:  # фильтруем найденные по авторам результаты по категориям
             articles = articles.filter(category__icontains=category_list[select_c - 1][0])
-    else:
-        select_a = 0
-        select_c = 0
-        articles = Article.objects.all()
+
+
+
+
+
+    #     if select_a == 0:
+    #         articles = Article.objects.all()
+    #     else:
+    #         articles = Article.objects.filter(author=select_a)
+    #         #print(connection.queries)
+    #     if select_c != 0:  # фильтруем найденные по авторам результаты по категориям
+    #         articles = articles.filter(category__icontains=category_list[select_c - 1][0])
+    # else:
+    #
+    #     select_a = 0
+    #     select_c = 0
+    #     articles = Article.objects.all()
 #-------------------------------------------------------------------------------
     # сортировка от свежих к старым новостям
     articles = articles.order_by('-date')
@@ -140,8 +171,8 @@ def news_all(request):
 #    context = {'articles': articles, 'author_list': author_list, 'selected': selected, 'account_list': account_list,
 #               'category_list': category_list }
 
-    context = {'articles': page_obj, 'author_list': author_list, 'selected': selected, 'account_list': account_list,
-               'category_list': category_list}
+    context = {'articles': page_obj, 'author_list1': author_list1, 'selected': selected, 'account_list': account_list,
+               'category_list': category_list, 'select_a': select_a, 'select_c': select_c}
 
     return render(request, 'main/news_all.html', context)
 
